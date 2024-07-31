@@ -9,7 +9,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    concurrency: fingerprint-${{ github.event_name != 'pull_request' && 'main' || github.run_id }}
+    concurrency: fingerprint-${{ github.event_name != 'pull_request_target' && 'main' || github.run_id }}
     permissions:
       pull-requests: write
       actions: write
