@@ -24,39 +24,34 @@ jobs:
           token: ${{ secrets.EXPO_TOKEN }}
       - name: 📦 Install dependencies
         run: npm install
-      - name: 🚀 Create preview
-        uses: expo/expo-github-action/preview@v8
-        id: preview
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🚀 Publish to Expo
+        run: expo publish --release-channel=pr-${{ github.event.number }} --non-interactive
+
+      - name: 💬 Comment in preview
+        uses: expo/expo-github-action/preview-comment@v8
         with:
-          command: eas update --auto --branch ${{ github.head_ref }}
-          comment: false
-          qr-target: 'expo-go'
+          channel: pr-${{ github.event.number }}
 
-      - name: 💬 Comment PR
-        uses: thollander/actions-comment-pull-request@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          comment_tag: execution
-          message: |
-            🚀 Expo preview is ready!
-            - Project → **${{ steps.preview.outputs.projectName }}**
-            - Platforms → **${{ steps.preview.outputs.platforms }}**
-            - Runtime Version → **${{ steps.preview.outputs.runtimeVersion }}**
-            - **[More info](${{ steps.preview.outputs.projectLink }})**
+      # - name: 💬 Comment PR
+      #   uses: thollander/actions-comment-pull-request@v2
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     comment_tag: execution
+      #     message: |
+      #       🚀 Expo preview is ready!
+      #       - Project → **${{ steps.preview.outputs.projectName }}**
+      #       - Runtime Version → **${{ steps.preview.outputs.runtimeVersion }}**
+      #       - Project QR: `${{ steps.preview.outputs.projectQR }}`            
+      #       - **[More info](${{ steps.preview.outputs.projectLink }})**
 
-            > Learn more about [𝝠 Expo Github Action](https://github.com/expo/expo-github-action/tree/main/preview#example-workflows)
+      #       > Learn more about [𝝠 Expo Github Action](https://github.com/expo/expo-github-action/tree/main/preview#example-workflows)
 
-            <details>
-            <summary>Additional Information</summary>
+      #       <details>
+      #       <summary>Additional Information</summary>
 
-            - Project Owner: `${{ steps.preview.outputs.projectOwner }}`
-            - Project Slug: `${{ steps.preview.outputs.projectSlug }}`
-            - Project Deep Link: `${{ steps.preview.outputs.projectDeepLink }}`
-            - Project QR: `${{ steps.preview.outputs.projectQR }}`
-            - Channel: `${{ steps.preview.outputs.channel }}`
-            - Message: `${{ steps.preview.outputs.message }}`
-            - Message ID: `${{ steps.preview.outputs.messageId }}`
-            </details>
+      #       - Project Owner: `${{ steps.preview.outputs.projectOwner }}`
+      #       - Project Slug: `${{ steps.preview.outputs.projectSlug }}`
+      #       - Project Deep Link: `${{ steps.preview.outputs.projectDeepLink }}`
+      #       </details>
