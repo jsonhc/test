@@ -3,6 +3,11 @@ name: Preview
 on: 
   pull_request:
     types: [opened, synchronize, reopened]
+  workflow_dispatch:
+    inputs:
+      pull_request_number:
+        description: 'PR number to preview'
+        required: true
 
 jobs:
   preview:
