@@ -30,10 +30,32 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           command: eas update --auto --branch ${{ github.head_ref }}
-          comment: true
+          comment: false
           qr-code: 'expo-go'
-          failOnError: true
+
+      - name: 💬 Comment PR
+        uses: thollander/actions-comment-pull-request@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          comment_tag: execution
           message: |
-            New update for PR #${{ github.event.pull_request.number }}
-            Branch: ${{ github.head_ref }}
-            Commit: ${{ github.event.pull_request.head.sha }}
+            🚀 Expo preview is ready!
+            - Project → **${{ steps.preview.outputs.projectName }}**
+            - Platforms → **${{ steps.preview.outputs.platforms }}**
+            - Runtime Version → **${{ steps.preview.outputs.runtimeVersion }}**
+            - **[More info](${{ steps.preview.outputs.projectLink }})**
+
+            > Learn more about [𝝠 Expo Github Action](https://github.com/expo/expo-github-action/tree/main/preview#example-workflows)
+
+            <details>
+            <summary>Additional Information</summary>
+
+            - Project Owner: `${{ steps.preview.outputs.projectOwner }}`
+            - Project Slug: `${{ steps.preview.outputs.projectSlug }}`
+            - Project Deep Link: `${{ steps.preview.outputs.projectDeepLink }}`
+            - Project QR: `${{ steps.preview.outputs.projectQR }}`
+            - Channel: `${{ steps.preview.outputs.channel }}`
+            - Message: `${{ steps.preview.outputs.message }}`
+            - Message ID: `${{ steps.preview.outputs.messageId }}`
+            </details>
