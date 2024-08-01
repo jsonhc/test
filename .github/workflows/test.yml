@@ -32,6 +32,7 @@ jobs:
           # `github.event.pull_request.head.ref` is only available on `pull_request` triggers.
           # Use your own, or keep the automatically infered branch name from `--auto`, when using different triggers.
           comment: true
+          token: ${{ secrets.EXPO_TOKEN }}
           qr-target: 'expo-go'
           working-directory: ${{ github.workspace }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
