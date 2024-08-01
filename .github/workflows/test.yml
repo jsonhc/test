@@ -1,4 +1,5 @@
-name: PR Preview
+name: Preview
+
 on:
   pull_request_target:
     types: [opened, synchronize, reopened]
@@ -7,30 +8,32 @@ jobs:
   preview:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: 🏗 Setup repo
+        uses: actions/checkout@v3
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: 🏗 Setup Node
+        uses: actions/setup-node@v3
         with:
-          node-version: '20'
-
+          node-version: 20.x
+          cache: npm
       - name: 🏗 Setup EAS
         uses: expo/expo-github-action@v8
         with:
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
-
-      - name: Install dependencies
+      - name: 📦 Install dependencies
         run: npm install
-
-      - name: Set up EAS
-        run: npm install -g expo-cli
-
-      - name: Preview Expo project
+      - name: 🚀 Create preview
         uses: expo/expo-github-action/preview@v8
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-            command: eas update --auto --branch ${{ github.event.pull_request.head.ref }}
-
+          command: eas update --auto --branch ${{ github.head_ref }}
+          comment: true
+          qr-code: 'expo-go'
+          failOnError: true
+          message: |
+            New update for PR #${{ github.event.pull_request.number }}
+            Branch: ${{ github.head_ref }}
+            Commit: ${{ github.event.pull_request.head.sha }}
