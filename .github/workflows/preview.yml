@@ -1,6 +1,9 @@
 name: Preview
 
-on: [pull_request]
+on: 
+  pull_request:
+    types: [opened, synchronize, reopened]
+
 jobs:
   preview:
     runs-on: ubuntu-latest
