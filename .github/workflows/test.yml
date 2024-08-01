@@ -44,14 +44,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           comment_tag: execution
-          message: |
-            ${{steps.preview.outputs.comment}}
-            # 🚀 Expo preview is ready!
-            # - Project → **${{ steps.preview.outputs.projectName }}**
-            # - Runtime Version → **${{ steps.preview.outputs.runtimeVersion }}**
-            # - Git Hash → **${{ steps.preview.outputs.gitCommitHash }}**
-            # - Created At → **${{ steps.preview.outputs.createdAt }}**
-            # - Project QR: `${{ steps.preview.outputs.qr }}`            
-            # - **[More info](${{ steps.preview.outputs.link }})**
-
-            # > Learn more about [𝝠 Expo Github Action](https://github.com/expo/expo-github-action/tree/main/preview#example-workflows)
+          message: ${{steps.preview.outputs.comment}}
