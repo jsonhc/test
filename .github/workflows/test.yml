@@ -7,26 +7,29 @@ on:
 jobs:
   preview:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write # Allow comments on PRs
     steps:
       - name: 🏗 Setup repo
         uses: actions/checkout@v3
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
+
       - name: 🏗 Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: 20.x
           cache: npm
-      - name: 🏗 Setup EAS
+
+      - name: 🏗 Setup Expo
         uses: expo/expo-github-action@v8
         with:
-          eas-version: latest
+          expo-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
+
       - name: 📦 Install dependencies
         run: npm install
 
       - name: 🚀 Publish to Expo
-        run: expo publish --release-channel=pr-${{ github.event.number }} --non-interactive
+        run: npx expo publish --release-channel=pr-${{ github.event.number }} --non-interactive
 
       - name: 💬 Comment in preview
         uses: expo/expo-github-action/preview-comment@v8
