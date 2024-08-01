@@ -19,22 +19,21 @@ jobs:
           node-version: 20.x
           cache: npm
 
-      - name: 🏗 Setup Expo
+      - name: 🏗 Setup EAS
         uses: expo/expo-github-action@v8
         with:
-          expo-version: latest
+          eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: 📦 Install dependencies
-        run: npm install
+        run: yarn install
 
-      - name: 🚀 Publish to Expo
-        run: npx expo publish --release-channel=pr-${{ github.event.number }} --non-interactive
-
-      - name: 💬 Comment in preview
-        uses: expo/expo-github-action/preview-comment@v8
+      - name: 🚀 Create preview
+        uses: expo/expo-github-action/preview@v8
         with:
-          channel: pr-${{ github.event.number }}
+          # `github.event.pull_request.head.ref` is only available on `pull_request` triggers.
+          # Use your own, or keep the automatically infered branch name from `--auto`, when using different triggers.
+          command: eas update --auto --branch ${{ github.event.pull_request.head.ref }}
 
       # - name: 💬 Comment PR
       #   uses: thollander/actions-comment-pull-request@v2
